@@ -2,7 +2,6 @@ import com.github.tototoshi.csv.CSVReader
 
 import java.io.File
 
-
 object Launcher {
   def main(args: Array[String]): Unit = {
     println("Hello World!")
@@ -13,5 +12,4 @@ object Launcher {
       element = reader.readNext();
     }
   }
-
 }
