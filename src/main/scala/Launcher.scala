@@ -30,14 +30,30 @@ object Launcher {
 
     println(filtered);
 
+    def recur(number:Int):Int =  {
+      if (number == 0) {
+        return number
+      };
+      var number2 = number - 1;
+      println(number);
+      recur(number2);
+
+    }
+
+    recur(100);
+
+    filtered.map(p => p.price * 0.8)
+
+    println(filtered);
 
   }
 }
 
-case class Property(id:Int,propertyName:String,price:Float,propertyType:String,sqFt:Int,bedrooms:Int,bathrooms:Int,receptions:Int,
+case class Property(id:Int,propertyName:String,price:Double,propertyType:String,sqFt:Int,bedrooms:Int,bathrooms:Int,receptions:Int,
                     location:String,city:String,postal:String) extends Address with Luxurious {
   override def toString: String = id.toString+"\t"+propertyName+"\t"+price.toString+"\t"+pricePerSQFt.toString+"\t"+propertyType+"\t"+sqFt.toString+"\t"+bedrooms.toString+"\t"+bathrooms.toString+"\t"+
     receptions.toString+"\t"+location+"\t"+city+"\t"+postal+"\t"+isLuxurious.toString+"\n"
+
 }
 
 trait Address {
@@ -47,7 +63,7 @@ trait Address {
 }
 
 trait Luxurious {
-  val price:Float;
+  val price:Double;
   val sqFt:Int;
   val pricePerSQFt = price/sqFt;
   def isLuxurious = pricePerSQFt > 1000;
@@ -71,3 +87,5 @@ trait Filters {
 
 
 }
+
+
