@@ -2,6 +2,7 @@ import com.github.tototoshi.csv.CSVReader
 
 import java.io.File
 import scala.collection.mutable.ListBuffer
+import scala.math.BigDecimal.double2bigDecimal
 
 
 object Launcher {
@@ -12,7 +13,7 @@ object Launcher {
 
     val p = t.toList
 
-    var propertyList = new ListBuffer[Property];
+    val propertyList = new ListBuffer[Property];
     var propertyIterator = 1;
 
     while (propertyIterator < p.length) {
@@ -25,27 +26,30 @@ object Launcher {
 
     def filterByPrice(price:Float, list:ListBuffer[Property]) = list.filter(p => p.price < price)
 
-    var filtered = filterByType("House", propertyList);
-    filtered = filterByPrice(475000, filtered);
+    val filtered = filterByType("House", propertyList);
+    val filtered2 = filterByPrice(475000, filtered);
 
-    println(filtered);
+    println(filtered2);
 
-    def recur(number:Int):Int =  {
-      if (number == 0) {
-        return number
-      };
-      var number2 = number - 1;
-      println(number);
-      recur(number2);
-
-    }
-
-    recur(100);
+    println(Operations(propertyList).recursiveSearch("Newlands", 0))
 
     filtered.map(p => p.price * 0.8)
 
-    println(filtered);
+    println(filtered2);
 
+
+    println()
+    println()
+
+    println(propertyList.last);
+
+    println()
+
+    println(Operations(propertyList).addProperty(propertyList.length,"Name",18273.23,"House",999,23,23,23,"London","London","3930").last)
+
+    println()
+    println()
+    println(Operations(propertyList).groupByType("Flat"))
   }
 }
 
@@ -55,6 +59,8 @@ case class Property(id:Int,propertyName:String,price:Double,propertyType:String,
     receptions.toString+"\t"+location+"\t"+city+"\t"+postal+"\t"+isLuxurious.toString+"\n"
 
 }
+
+case class Group(propertyType:String,count:Int,total:Double,averagePrice:Double,averagePriceSQFt:Double);
 
 trait Address {
   val location:String;
@@ -71,19 +77,57 @@ trait Luxurious {
 
 
 
-case class PropertyList() extends ListBuffer[PropertyList] with Filters {
+case class PropertyList() extends ListBuffer[PropertyList] with FiltersT {
 
   override val list = this;
 
 }
 
-trait Filters {
+trait FiltersT {
 
   val list:PropertyList;
 
   def filterByType(propertyType:String, list:ListBuffer[Property]) = list.filter(p => p.propertyType.contains(propertyType))
 
   def filterByPrice(price:Float, list:ListBuffer[Property]) = list.filter(p => p.price < price)
+
+
+}
+
+case class Operations(list:ListBuffer[Property]) {
+
+  def filterByName(propertyName:String): ListBuffer[Property] = list.filter(p => p.propertyName.contains(propertyName))
+
+  def filterByType(propertyType:String) = list.filter(p => p.propertyType.contains(propertyType))
+
+  def filterByPrice(price:Float) = list.filter(p => p.price < price)
+
+  def addProperty(id:Int,propertyName:String,price:Double,propertyType:String,sqFt:Int,bedrooms:Int,bathrooms:Int,receptions:Int,
+                  location:String,city:String,postal:String):ListBuffer[Property] = list.addOne(new Property(id,propertyName,price,propertyType,sqFt,bedrooms,bathrooms,receptions,location,city,postal))
+
+  def recursiveSearch(searchName:String, iterator:Int): Property = {
+    if (list(iterator).propertyName.contains(searchName)) {
+      return list(iterator)
+    }
+    else {
+      var iterator2 = iterator+1;
+      recursiveSearch(searchName, iterator2);
+    }
+  }
+
+  def groupByType(propertyType:String):Group = {
+
+    val filteredList = list.filter(p => p.propertyType.contains(propertyType));
+    var total:Double = 0;
+    var averageSQ:Double = 0;
+    filteredList.foreach(p => {
+      total += p.price
+      averageSQ = averageSQ + p.pricePerSQFt
+    })
+
+    return new Group(propertyType,filteredList.length, total,total/filteredList.length,averageSQ/filteredList.length)
+
+  }
 
 
 }
