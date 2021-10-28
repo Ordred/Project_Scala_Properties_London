@@ -1,9 +1,7 @@
 import com.github.tototoshi.csv.CSVReader
 
 import java.io.File
-import scala.collection.mutable.ListBuffer
-import scala.math.BigDecimal.double2bigDecimal
-
+import scala.language.implicitConversions
 
 object Launcher {
   def main(args: Array[String]): Unit = {
@@ -13,18 +11,27 @@ object Launcher {
 
     val p = t.toList
 
-    val propertyList = new ListBuffer[Property];
+    val propertyList = toPropertyList(p);
     var propertyIterator = 1;
 
     while (propertyIterator < p.length) {
-      propertyList += (new Property(p(propertyIterator)(0).toInt,p(propertyIterator)(1),p(propertyIterator)(2).toFloat,p(propertyIterator)(3),p(propertyIterator)(4).toInt,p(propertyIterator)(5).toInt,p(propertyIterator)(6).toInt,p(propertyIterator)(7).toInt,p(propertyIterator)(8),p(propertyIterator)(9),p(propertyIterator)(10)));
+      propertyList.appended(Property(p(propertyIterator)(0).toInt,p(propertyIterator)(1),p(propertyIterator)(2).toFloat,p(propertyIterator)(3),p(propertyIterator)(4).toInt,p(propertyIterator)(5).toInt,p(propertyIterator)(6).toInt,p(propertyIterator)(7).toInt,p(propertyIterator)(8),p(propertyIterator)(9),p(propertyIterator)(10)));
       propertyIterator = propertyIterator+1;
     }
 
+  def toPropertyList(list: List[List[String]]){
+    val newList = List.empty;
 
-    def filterByType(propertyType:String, list:ListBuffer[Property]) = list.filter(p => p.propertyType.contains(propertyType))
+    list.map(
+      // todo
+    )
 
-    def filterByPrice(price:Float, list:ListBuffer[Property]) = list.filter(p => p.price < price)
+    return newList;
+  }
+
+    def filterByType(propertyType:String, list:List[Property]) = list.filter(p => p.propertyType.contains(propertyType))
+
+    def filterByPrice(price:Float, list:List[Property]) = list.filter(p => p.price < price)
 
     val filtered = filterByType("House", propertyList);
     val filtered2 = filterByPrice(475000, filtered);
@@ -37,6 +44,10 @@ object Launcher {
 
     println(filtered2);
 
+    filtered.map(e => e.propertyName.match{
+      case String => "hallo"
+      case _ => "bye"
+    })
 
     println()
     println()
@@ -77,33 +88,34 @@ trait Luxurious {
 
 
 
-case class PropertyList() extends ListBuffer[PropertyList] with FiltersT {
+case class PropertyList() extends List[PropertyList]{
 
-  override val list = this;
-
-}
-
-trait FiltersT {
-
-  val list:PropertyList;
-
-  def filterByType(propertyType:String, list:ListBuffer[Property]) = list.filter(p => p.propertyType.contains(propertyType))
-
-  def filterByPrice(price:Float, list:ListBuffer[Property]) = list.filter(p => p.price < price)
-
+   val list = this;
 
 }
 
-case class Operations(list:ListBuffer[Property]) {
+trait Filters[T](filterCriterion: T, propertyList: List[Property]) extends Enumeration {
 
-  def filterByName(propertyName:String): ListBuffer[Property] = list.filter(p => p.propertyName.contains(propertyName))
+  def filterByType(propertyType: T, list:List[Property]) = list.filter(p => p.propertyType.contains(propertyType))
+  def filterByPrice(price: T, list:List[Property]) = list.filter(p => p.price < price)
+  def filterByIsLuxurious(list: List[Property]) = list.filter(p => p.isLuxurious)
+
+
+  val propertyType    = filterByType(filterCriterion, propertyList)
+  val propertyPrice   = filterByPrice(filterCriterion, propertyList)
+  val isLuxourious    = filterByIsLuxurious(propertyList)
+}
+
+case class Operations(list:List[Property]) {
+
+  def filterByName(propertyName:String): List[Property] = list.filter(p => p.propertyName.contains(propertyName))
 
   def filterByType(propertyType:String) = list.filter(p => p.propertyType.contains(propertyType))
 
   def filterByPrice(price:Float) = list.filter(p => p.price < price)
 
   def addProperty(id:Int,propertyName:String,price:Double,propertyType:String,sqFt:Int,bedrooms:Int,bathrooms:Int,receptions:Int,
-                  location:String,city:String,postal:String):ListBuffer[Property] = list.addOne(new Property(id,propertyName,price,propertyType,sqFt,bedrooms,bathrooms,receptions,location,city,postal))
+                  location:String,city:String,postal:String):List[Property] = list.appended(new Property(id,propertyName,price,propertyType,sqFt,bedrooms,bathrooms,receptions,location,city,postal))
 
   def recursiveSearch(searchName:String, iterator:Int): Property = {
     if (list(iterator).propertyName.contains(searchName)) {
@@ -128,6 +140,8 @@ case class Operations(list:ListBuffer[Property]) {
     return new Group(propertyType,filteredList.length, total,total/filteredList.length,averageSQ/filteredList.length)
 
   }
+
+
 
 
 }
