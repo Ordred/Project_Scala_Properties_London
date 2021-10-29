@@ -32,7 +32,30 @@ object Launcher {
 
     val propertyList2 = init();
 
-    println(mainFilter(filters, propertyList2).count(p => true),mainFilter(filters, propertyList2))
+    println(mainFilter(filters, propertyList2).count(p => true),mainSort(List("Price", "Name"), mainFilter(filters, propertyList2)))
+
+  }
+
+  def mainSort(sortByList: List[String], propertyList: List[Property]): List[Property] ={
+    def sortByName(sortNameList: List[Property]): List[Property] = sortNameList.sortBy(p => p.propertyName)
+    def sortByType(sortTypeList: List[Property]): List[Property] = sortTypeList.sortBy(p => p.propertyType)
+    def sortByPrice(sortPriceList: List[Property]): List[Property] = sortPriceList.sortBy(p => p.price)
+    def sortByBedrooms(sortBedroomsList: List[Property]): List[Property] = sortBedroomsList.sortBy(p => p.bedrooms)
+
+    var tempList: List[Property] = propertyList;
+
+    val tempSortByList = sortByList.reverse;
+
+    tempSortByList.map(e => {
+      e match{
+        case "Name" => tempList = sortByName(tempList)
+        case "Type" => tempList = sortByType(tempList)
+        case "Price" => tempList = sortByPrice(tempList)
+        case "Bedrooms" => tempList = sortByBedrooms(tempList)
+      }
+    })
+
+    tempList
 
   }
 
