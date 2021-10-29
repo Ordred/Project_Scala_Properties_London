@@ -14,7 +14,7 @@ object Launcher {
 
     val p = t.toList
 
-    return p.drop(1).map(p => Property(p(0).toInt,p(1).toString,p(2).toDouble,p(3).toString,p(4).toInt,p(5).toInt,p(6).toInt,p(7).toInt,p(8).toString,p(9).toString,p(10).toString));
+    p.drop(1).map(p => Property(p(0).toInt,p(1).toString,p(2).toDouble,p(3).toString,p(4).toInt,p(5).toInt,p(6).toInt,p(7).toInt,p(8).toString,p(9).toString,p(10).toString));
 
   }
 
@@ -22,13 +22,52 @@ object Launcher {
 
     val propertyList = init();
 
-    println(Operations(propertyList).filterByPrice(300000))
+    //println(Operations(propertyList).filterByPrice(300000))
 
-    println(Operations(propertyList).filterByType("Flat"))
+    //println(Operations(propertyList).filterByType("Flat"))
 
-    println(Operations(propertyList).groupByType("House"))
+    //println(Operations(propertyList).groupByType("House"))
 
+    val filters: Filters = Filters(None ,Some("Apartment"),Some(2400000.0), None )
 
+    val propertyList2 = init();
+
+    println(mainFilter(filters, propertyList2).count(p => true),mainFilter(filters, propertyList2))
+
+  }
+
+  def mainFilter(filters: Filters, list: List[Property]): List[Property] ={
+    def filterByName(propertyName:String, nameInputList: List[Property]):  Option[List[Property]] = Some(nameInputList.filter(p => p.propertyName.contains(propertyName)))
+    def filterByType(propertyType:String, typeInputList: List[Property]): Option[List[Property]] = Some(typeInputList.filter(p => p.propertyType.contains(propertyType)))
+    def filterByPrice(price:Double, priceInputList: List[Property]): Option[List[Property]] = Some(priceInputList.filter(p => p.price < price))
+    def filerByLuxurious(luxInputList: List[Property]): Option[List[Property]] = Some(luxInputList.filter(p => p.isLuxurious))
+
+    var nameFilterList: Option[List[Property]] = None;
+    var typeFilterList: Option[List[Property]] = None;
+    var priceFilterList: Option[List[Property]] = None;
+    var luxFilterList: Option[List[Property]] = None;
+
+    if(filters.NameFilter.isDefined){
+      nameFilterList = filterByName(filters.NameFilter.get, list)
+    }else{
+      nameFilterList = Some(list)
+    }
+    if(filters.TypeFilter.isDefined){
+      typeFilterList = filterByType(filters.TypeFilter.get, nameFilterList.get)
+    }else{
+      typeFilterList = nameFilterList
+    }
+    if(filters.PriceFilter.isDefined){
+      priceFilterList = filterByPrice(filters.PriceFilter.get, typeFilterList.get)
+    }else{
+      priceFilterList = typeFilterList
+    }
+    if(filters.LuxuriousFilter.isDefined){
+      luxFilterList = filerByLuxurious(priceFilterList.get)
+    }else{
+      luxFilterList = priceFilterList
+    }
+    luxFilterList.get
   }
 }
 
@@ -53,6 +92,10 @@ trait Luxurious {
   val pricePerSQFt = price/sqFt;
   def isLuxurious = pricePerSQFt > 1000;
 }
+
+case class Filters(NameFilter: Option[String],TypeFilter: Option[String],PriceFilter: Option[Double],LuxuriousFilter: Option[Boolean])
+
+
 
 case class Operations(list:List[Property]) {
 
