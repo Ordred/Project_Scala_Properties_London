@@ -42,31 +42,38 @@ object Launcher {
     def filterByPrice(price:Double, priceInputList: List[Property]): Option[List[Property]] = Some(priceInputList.filter(p => p.price < price))
     def filerByLuxurious(luxInputList: List[Property]): Option[List[Property]] = Some(luxInputList.filter(p => p.isLuxurious))
 
-    var nameFilterList: Option[List[Property]] = None;
-    var typeFilterList: Option[List[Property]] = None;
-    var priceFilterList: Option[List[Property]] = None;
-    var luxFilterList: Option[List[Property]] = None;
+    val nameFilterList: Option[List[Property]] = {
+      if(filters.NameFilter.isDefined){
+        filterByName(filters.NameFilter.get, list)
+      }else{
+        Some(list)
+      }
+    }
 
-    if(filters.NameFilter.isDefined){
-      nameFilterList = filterByName(filters.NameFilter.get, list)
-    }else{
-      nameFilterList = Some(list)
+    val typeFilterList: Option[List[Property]] = {
+      if(filters.TypeFilter.isDefined){
+        filterByType(filters.TypeFilter.get, nameFilterList.get)
+      }else{
+        Some(nameFilterList.get)
+      }
     }
-    if(filters.TypeFilter.isDefined){
-      typeFilterList = filterByType(filters.TypeFilter.get, nameFilterList.get)
-    }else{
-      typeFilterList = nameFilterList
+
+    val priceFilterList: Option[List[Property]] = {
+      if(filters.PriceFilter.isDefined){
+        filterByPrice(filters.PriceFilter.get, typeFilterList.get)
+      }else{
+        Some(typeFilterList.get)
+      }
     }
-    if(filters.PriceFilter.isDefined){
-      priceFilterList = filterByPrice(filters.PriceFilter.get, typeFilterList.get)
-    }else{
-      priceFilterList = typeFilterList
+
+    val luxFilterList: Option[List[Property]] = {
+      if(filters.NameFilter.isDefined){
+        filerByLuxurious(priceFilterList.get)
+      }else{
+        Some(priceFilterList.get)
+      }
     }
-    if(filters.LuxuriousFilter.isDefined){
-      luxFilterList = filerByLuxurious(priceFilterList.get)
-    }else{
-      luxFilterList = priceFilterList
-    }
+
     luxFilterList.get
   }
 }
