@@ -90,6 +90,10 @@ object Operations {
     }
     Group("Group by: " + Criteria, tempList.count(p => true), tempList.map(_.price).sum, avgPrice(tempList), avgPricePerSQFt(tempList), tempList)
   }
+
+  def combineFilteredLists(propertyListList: List[List[Property]]): List[Property] ={
+    propertyListList.flatten.distinct
+  }
 }
 
 case class Filters(NameFilter: Option[String],TypeFilter: Option[String],PriceFilter: Option[Double],LuxuriousFilter: Option[Boolean], CityFilter: Option[String])

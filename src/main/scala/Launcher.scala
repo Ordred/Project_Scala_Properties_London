@@ -15,6 +15,10 @@ object Launcher {
 
     val filters: Filters = Filters(None ,Some("Apartment"),Some(2400000.0), None, None)
 
+    val filters2: Filters = Filters(Some("Road") ,Some("House"),Some(2400000.0), None, None)
+
+    val filters3: Filters = Filters(None ,Some("Duplex"),Some(2400000.0), None, Some("Holland Park"))
+
     val sortList: List[String] = List("Bedrooms", "Price", "Name")
 
     val propertyList2 = init();
@@ -32,6 +36,8 @@ object Launcher {
     Services.rentOrBuy(Operations.mainFilter(Filters(Some("The Pryors"),None,None,None, None),propertyList2).head, 11750)
 
     Services.monthsUntilAmortized(Operations.mainFilter(Filters(Some("The Pryors"),None,None,None, None),propertyList2).head)
+
+    println(Operations.combineFilteredLists(List(Operations.mainFilter(filters, propertyList2), Operations.mainFilter(filters2, propertyList2), Operations.mainFilter(filters3, propertyList2))))
   }
 
 
