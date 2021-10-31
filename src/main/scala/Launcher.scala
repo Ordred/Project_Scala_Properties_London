@@ -5,14 +5,6 @@ import java.io.File
 object Launcher {
   def main(args: Array[String]): Unit = {
 
-    val propertyList = init();
-
-    //println(Operations(propertyList).filterByPrice(300000))
-
-    //println(Operations(propertyList).filterByType("Flat"))
-
-    //println(Operations(propertyList).groupByType("House"))
-
     val filters: Filters = Filters(None ,Some("Apartment"),Some(2400000.0), None, None)
 
     val filters2: Filters = Filters(Some("Road") ,Some("House"),Some(2400000.0), None, None)
@@ -21,23 +13,55 @@ object Launcher {
 
     val sortList: List[String] = List("Bedrooms", "Price", "Name")
 
-    val propertyList2 = init();
+    val propertyList = init();
 
-    //println(Operations.mainFilter(filters, propertyList2).count(p => true), Operations.mainSort(sortList, Operations.mainFilter(filters, propertyList2), true))
+    println("=============================================================================================")
+    println("mainFilter test")
+    println("=============================================================================================")
 
-    //println(Operations.mainFilter(Filters(Some("The Pryors"),None,None,None, None),propertyList2));
+    println(Operations.mainFilter(Filters(Some("The Pryors"),None,None,None, None),propertyList));
 
-    //println(Services.buyProperty("Jeff Bezos", Operations.mainFilter(Filters(Some("The Pryors"),None,None,None, None),propertyList2).head))
+    println("=============================================================================================")
+    println("mainSort test")
+    println("=============================================================================================")
 
-    //Services.showCredit(propertyList, 100000);
+    println(Operations.mainFilter(filters, propertyList).count(p => true), Operations.mainSort(sortList, Operations.mainFilter(filters, propertyList), true))
 
-    //Services.comparison(propertyList.head, propertyList(3478))
+    println("=============================================================================================")
+    println("buyProperty test")
+    println("=============================================================================================")
 
-    Services.rentOrBuy(Operations.mainFilter(Filters(Some("The Pryors"),None,None,None, None),propertyList2).head, 11750)
+    println(Services.buyProperty("Jeff Bezos", Operations.mainFilter(Filters(Some("The Pryors"),None,None,None, None),propertyList).head))
 
-    Services.monthsUntilAmortized(Operations.mainFilter(Filters(Some("The Pryors"),None,None,None, None),propertyList2).head)
+    println("=============================================================================================")
+    println("showCredit test")
+    println("=============================================================================================")
 
-    println(Operations.combineFilteredLists(List(Operations.mainFilter(filters, propertyList2), Operations.mainFilter(filters2, propertyList2), Operations.mainFilter(filters3, propertyList2))))
+    Services.showCredit(propertyList, 100000);
+
+    println("=============================================================================================")
+    println("comparison test")
+    println("=============================================================================================")
+
+    Services.comparison(propertyList.head, propertyList(3478))
+
+    println("=============================================================================================")
+    println("rentOrBuy test")
+    println("=============================================================================================")
+
+    Services.rentOrBuy(Operations.mainFilter(Filters(Some("The Pryors"),None,None,None, None),propertyList).head, 11750)
+
+    println("=============================================================================================")
+    println("monthsUntilAmortized test")
+    println("=============================================================================================")
+
+    Services.monthsUntilAmortized(Operations.mainFilter(Filters(Some("The Pryors"),None,None,None, None),propertyList).head)
+
+    println("=============================================================================================")
+    println("combineFilteredLists test")
+    println("=============================================================================================")
+
+    println(Operations.combineFilteredLists(List(Operations.mainFilter(filters, propertyList), Operations.mainFilter(filters2, propertyList), Operations.mainFilter(filters3, propertyList))))
   }
 
 
