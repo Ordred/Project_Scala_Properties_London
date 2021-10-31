@@ -112,9 +112,13 @@ object Services {
       if(monthlyCost<income){
         println(property+"With an Income of " + income + " this Property should be bought" )
       }else{
-        println(property+"With an Income of " + income + " this Property cannot be acquired" )
+        println(property+"With an Income of " + income + " this Property should not be acquired" )
       }
     }
+  }
+
+  def monthsUntilAmortized(property: Property): Unit ={
+    println("It would take " + (property.price/calculateRent(property)).ceil.toInt + " months of renting out the property \"" + property.propertyName + "\" until it is amortized")
   }
 }
 

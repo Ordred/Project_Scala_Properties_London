@@ -19,16 +19,21 @@ object Launcher {
 
     val propertyList2 = init();
 
-    println(Operations.mainFilter(filters, propertyList2).count(p => true), Operations.mainSort(sortList, Operations.mainFilter(filters, propertyList2), true))
+    //println(Operations.mainFilter(filters, propertyList2).count(p => true), Operations.mainSort(sortList, Operations.mainFilter(filters, propertyList2), true))
 
-    println(Operations.mainFilter(Filters(Some("The Pryors"),None,None,None, None),propertyList2));
+    //println(Operations.mainFilter(Filters(Some("The Pryors"),None,None,None, None),propertyList2));
 
-    println(Services.buyProperty("Jeff Bezos", Operations.mainFilter(Filters(Some("The Pryors"),None,None,None, None),propertyList2).head))
+    //println(Services.buyProperty("Jeff Bezos", Operations.mainFilter(Filters(Some("The Pryors"),None,None,None, None),propertyList2).head))
 
-    Services.showCredit(propertyList, 100000);
+    //Services.showCredit(propertyList, 100000);
 
-    Services.comparison(propertyList.head, propertyList(3478))
+    //Services.comparison(propertyList.head, propertyList(3478))
+
+    Services.rentOrBuy(Operations.mainFilter(Filters(Some("The Pryors"),None,None,None, None),propertyList2).head, 11750)
+
+    Services.monthsUntilAmortized(Operations.mainFilter(Filters(Some("The Pryors"),None,None,None, None),propertyList2).head)
   }
+
 
   def init():List[Property] = {
 
