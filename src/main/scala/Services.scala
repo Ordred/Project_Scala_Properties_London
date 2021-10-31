@@ -83,6 +83,39 @@ object Services {
   def buyProperty(buyer:String, property:Property):Property = {
     Property(property.id,property.propertyName,property.price,property.propertyType, property.sqFt, property.bedrooms, property.bathrooms, property.receptions, property.location,property.city,property.postal,Some(buyer), None)
   }
+
+  def showRent(propertyList: List[Property]): Unit ={
+    propertyList.map(p => print(p+"Calculated Rent: "+(calculateRent(p))+"£"+"\n"))
+  }
+
+  def calculateRent(property: Property): Double ={
+    property.price*.007
+  }
+
+  def rentOrBuy(property: Property, income: Double): Unit ={
+    val rent: Double = calculateRent(property)
+    val monthlyCost: Double = property.price*0.005+1000
+    val decision:String = {
+        if(rent<monthlyCost) {
+          "rented"
+        }else{
+          "bought"
+        }
+    }
+    if(rent<income){
+      if(monthlyCost<income){
+        println(property+"With an Income of " + income + " this Property should be " + decision )
+      }else{
+        println(property+"With an Income of " + income + " this Property should be rented" )
+      }
+    }else{
+      if(monthlyCost<income){
+        println(property+"With an Income of " + income + " this Property should be bought" )
+      }else{
+        println(property+"With an Income of " + income + " this Property cannot be acquired" )
+      }
+    }
+  }
 }
 
 case class BoughtProperty(buyer:String,property: Property)
