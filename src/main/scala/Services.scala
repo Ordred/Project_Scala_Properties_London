@@ -77,7 +77,11 @@ object Services {
   }
 
   def showCredit(propertyList:List[Property], income:Double):Unit = {
-    propertyList.map(p => print(p+"Interest Rate: "+(p.price/(income*10))+"%"+"\n"+"Term: "+(p.price/(income/3)/12).ceil+" years"+"\n"+"Decision: "+(((p.price/(income/3)/12).ceil) < 10 ).toString+"\n"));
+    try {
+      propertyList.map(p => println(p+"Interest Rate: "+(p.price/(income*10))+"%"+"\n"+"Term: "+(p.price/(income/3)/12).ceil+" years"+"\n"+"Decision: "+(((p.price/(income/3)/12).ceil) < 10 ).toString))
+    }catch{
+      case ex:Exception => println("Division by zero"+ ex.getMessage)
+    }
   }
 
   def buyProperty(buyer:String, property:Property):Property = {
@@ -85,7 +89,7 @@ object Services {
   }
 
   def showRent(propertyList: List[Property]): Unit ={
-    propertyList.map(p => print(p+"Calculated Rent: "+(calculateRent(p))+"£"+"\n"))
+    propertyList.map(p => println(p+"Calculated Rent: "+(calculateRent(p))+"£"))
   }
 
   def calculateRent(property: Property): Double ={
@@ -118,7 +122,11 @@ object Services {
   }
 
   def monthsUntilAmortized(property: Property): Unit ={
-    println("It would take " + (property.price/calculateRent(property)).ceil.toInt + " months of renting out the property \"" + property.propertyName + "\" until it is amortized")
+    try{
+      println("It would take " + (property.price/calculateRent(property)).ceil.toInt + " months of renting out the property \"" + property.propertyName + "\" until it is amortized")
+    }catch{
+      case ex:Exception => println("Division by zero"+ ex.getMessage)
+    }
   }
 }
 

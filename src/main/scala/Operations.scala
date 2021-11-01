@@ -1,3 +1,8 @@
+import java.util.concurrent.TimeUnit
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.duration.{Duration, durationToPair}
+
 object Operations {
   def mainSort(sortByList: List[String], propertyList: List[Property], firstIteration: Boolean): List[Property] ={
     def sortByName(sortNameList: List[Property]): List[Property] = sortNameList.sortBy(p => p.propertyName)

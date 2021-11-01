@@ -1,8 +1,16 @@
 import com.github.tototoshi.csv.CSVReader
 
 import java.io.File
+import java.lang.System.console
+import java.util.concurrent.TimeUnit
+import scala.concurrent
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration.{Duration, DurationInt}
+import scala.util.{Failure, Success, Try}
 
 object Launcher {
+
   def main(args: Array[String]): Unit = {
 
     val filters: Filters = Filters(None ,Some("Apartment"),Some(2400000.0), None, None)
@@ -25,7 +33,7 @@ object Launcher {
     println("mainSort test")
     println("=============================================================================================")
 
-    println(Operations.mainFilter(filters, propertyList).count(p => true), Operations.mainSort(sortList, Operations.mainFilter(filters, propertyList), true))
+    println(Future(Operations.mainFilter(filters, propertyList).count(p => true), Operations.mainSort(sortList, Operations.mainFilter(filters, propertyList), true)))
 
     println("=============================================================================================")
     println("buyProperty test")
@@ -61,13 +69,22 @@ object Launcher {
     println("combineFilteredLists test")
     println("=============================================================================================")
 
-    println(Operations.combineFilteredLists(List(Operations.mainFilter(filters, propertyList), Operations.mainFilter(filters2, propertyList), Operations.mainFilter(filters3, propertyList))))
-  }
+    val future = Future(Operations.combineFilteredLists(List(Operations.mainFilter(filters, propertyList), Operations.mainFilter(filters2, propertyList), Operations.mainFilter(filters3, propertyList))))
 
+    val resultFuture = Await.result(future, 2.seconds)
+
+    println(resultFuture)
+  }
 
   def init():List[Property] = {
 
-    val reader = CSVReader.open(new File("./08-PropertiesLondon.csv"));
+    val reader = try {
+      CSVReader.open(new File("./08-PropertiesLondon.csv"))
+    }catch {
+      case ex:Exception => println("Unable to read file"+ ex.getMessage)
+      null
+    }
+
     val t = reader.toStream;
 
     val p = t.toList
@@ -75,6 +92,7 @@ object Launcher {
     p.drop(1).map(p => Property(p(0).toInt,p(1).toString,p(2).toDouble,p(3).toString,p(4).toInt,p(5).toInt,p(6).toInt,p(7).toInt,p(8).toString,p(9).toString,p(10).toString,None, None))
 
   }
+
 }
 
 
