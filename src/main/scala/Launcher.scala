@@ -1,13 +1,9 @@
 import com.github.tototoshi.csv.CSVReader
 
 import java.io.File
-import java.lang.System.console
-import java.util.concurrent.TimeUnit
-import scala.concurrent
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Await, Future}
-import scala.concurrent.duration.{Duration, DurationInt}
-import scala.util.{Failure, Success, Try}
+import scala.concurrent.duration.DurationInt
 
 object Launcher {
 
@@ -20,19 +16,19 @@ object Launcher {
 
     val sortList: List[String] = List("Bedrooms", "Price", "Name")
 
-    val propertyList = init();
+    val propertyList = init()
 
     println("=============================================================================================")
     println("mainFilter test")
     println("=============================================================================================")
 
-    println(Operations.mainFilter(Filters(Some("The Pryors"),None,None,None, None),propertyList));
+    println(Operations.mainFilter(Filters(Some("The Pryors"),None,None,None, None),propertyList))
 
     println("=============================================================================================")
     println("mainSort test")
     println("=============================================================================================")
 
-    println(Operations.mainFilter(filters, propertyList).count(p => true), Operations.mainSort(sortList, Operations.mainFilter(filters, propertyList), true))
+    println(Operations.mainFilter(filters, propertyList).count(_ => true), Operations.mainSort(sortList, Operations.mainFilter(filters, propertyList), firstIteration = true))
 
     println("=============================================================================================")
     println("buyProperty test")
@@ -44,7 +40,7 @@ object Launcher {
     println("showCredit test")
     println("=============================================================================================")
 
-    Services.showCredit(propertyList, 100000);
+    Services.showCredit(propertyList, 100000)
 
     println("=============================================================================================")
     println("comparison test")
@@ -71,7 +67,7 @@ object Launcher {
     // creates future for the function combineFilteredLists
     val future = Future(Operations.combineFilteredLists(List(Operations.mainFilter(filters, propertyList), Operations.mainFilter(filters2, propertyList), Operations.mainFilter(filters3, propertyList))))
 
-    // retreives the result of the future of the function combineFilteredLists
+    // retrieves the result of the future of the function combineFilteredLists
     val resultFuture = Await.result(future, 2.seconds)
 
     // prints the result of the future of the function combineFilteredLists
@@ -87,11 +83,11 @@ object Launcher {
       null
     }
 
-    val t = reader.toStream;
+    val t = reader.toStream
 
     val p = t.toList
 
-    p.drop(1).map(p => Property(p(0).toInt,p(1).toString,p(2).toDouble,p(3).toString,p(4).toInt,p(5).toInt,p(6).toInt,p(7).toInt,p(8).toString,p(9).toString,p(10).toString,None))
+    p.drop(1).map(p => Property(p.head.toInt,p(1),p(2).toDouble,p(3),p(4).toInt,p(5).toInt,p(6).toInt,p(7).toInt,p(8),p(9),p(10),None))
 
   }
 
