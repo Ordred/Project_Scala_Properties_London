@@ -1,7 +1,7 @@
 case class Property(id:Int,propertyName:String,price:Double,propertyType:String,sqFt:Int,bedrooms:Int,bathrooms:Int,receptions:Int,
-                    location:String,city:String,postal:String,owner:Option[String], income:Option[Double]) extends Address with Luxurious with Interest {
+                    location:String,city:String,postal:String,owner:Option[String]) extends Address with Luxurious {
   override def toString: String = id.toString+"\t"+propertyName+"\t"+price.toString+"\t"+pricePerSQFt.toString+"\t"+propertyType+"\t"+sqFt.toString+"\t"+bedrooms.toString+"\t"+bathrooms.toString+"\t"+
-    receptions.toString+"\t"+location+"\t"+city+"\t"+postal+"\t"+isLuxurious.toString+"\t"+owner+"\t"+interestRate+"\n"
+    receptions.toString+"\t"+location+"\t"+city+"\t"+postal+"\t"+isLuxurious.toString+"\t"+owner+"\n"
 
 }
 
@@ -21,9 +21,4 @@ trait Luxurious {
   def isLuxurious = pricePerSQFt > 1000;
 }
 
-trait Interest {
-  val price:Double;
-  val income:Option[Double];
-  def interestRate = {if (income != None) price/(income.get*1000) else 0};
-}
 

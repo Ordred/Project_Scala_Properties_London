@@ -85,7 +85,7 @@ object Services {
   }
 
   def buyProperty(buyer:String, property:Property):Property = {
-    Property(property.id,property.propertyName,property.price,property.propertyType, property.sqFt, property.bedrooms, property.bathrooms, property.receptions, property.location,property.city,property.postal,Some(buyer), None)
+    Property(property.id,property.propertyName,property.price,property.propertyType, property.sqFt, property.bedrooms, property.bathrooms, property.receptions, property.location,property.city,property.postal,Some(buyer))
   }
 
   def showRent(propertyList: List[Property]): Unit ={
