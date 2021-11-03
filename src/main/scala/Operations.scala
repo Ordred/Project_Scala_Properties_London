@@ -4,6 +4,11 @@ import scala.concurrent.Future
 import scala.concurrent.duration.{Duration, durationToPair}
 
 object Operations {
+  // Takes the List of attributes to sort by, the list of properties and wether it is
+  // the first iteration of the recursion or not as parameters
+  // Sorted by the reversed sortByList, so that the sorting goes in the order of the list with the
+  // priority going from left to right
+  // returns the sorted List
   def mainSort(sortByList: List[String], propertyList: List[Property], firstIteration: Boolean): List[Property] ={
     def sortByName(sortNameList: List[Property]): List[Property] = sortNameList.sortBy(p => p.propertyName)
     def sortByType(sortTypeList: List[Property]): List[Property] = sortTypeList.sortBy(p => p.propertyType)
@@ -30,6 +35,9 @@ object Operations {
     }
   }
 
+  // takes a Filter object,that consists of Filter type options, and the list to filter as parameters
+  // and applies the filter for all attributes of the Filter object that contain some()
+  // returns the filtered List
   def mainFilter(filters: Filters, list: List[Property]): List[Property] ={
     def filterByName(propertyName:String, nameInputList: List[Property]):  Option[List[Property]] = Some(nameInputList.filter(p => p.propertyName.contains(propertyName)))
     def filterByType(propertyType:String, typeInputList: List[Property]): Option[List[Property]] = Some(typeInputList.filter(p => p.propertyType.contains(propertyType)))
@@ -80,6 +88,8 @@ object Operations {
     cityFilterList.get
   }
 
+  // takes the property List, the Column, which will be grouped, and the selected group as parameters
+  // returns the selected group with some additional information as a Group object
   def groupBy(propertyList: List[Property], CriteriaType: String, Criteria: String): Group ={
     def avgPrice(list: List[Property]): Double ={
       list.map(_.price).sum / list.length
@@ -96,6 +106,8 @@ object Operations {
     Group("Group by: " + Criteria, tempList.count(p => true), tempList.map(_.price).sum, avgPrice(tempList), avgPricePerSQFt(tempList), tempList)
   }
 
+  // takes a list of property Lists as the parameter and combines them into one property list
+  // returns the combined list with the duplicates removed
   def combineFilteredLists(propertyListList: List[List[Property]]): List[Property] ={
     propertyListList.flatten.distinct
   }

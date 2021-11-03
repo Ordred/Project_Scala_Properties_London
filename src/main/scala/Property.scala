@@ -5,6 +5,7 @@ case class Property(id:Int,propertyName:String,price:Double,propertyType:String,
 
 }
 
+// contains a group of properties and some additional aggregated information
 case class Group(propertyType:String,count:Int,total:Double,averagePrice:Double,averagePriceSQFt:Double, groupList:List[Property])
 
 

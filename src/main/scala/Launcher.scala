@@ -12,7 +12,6 @@ import scala.util.{Failure, Success, Try}
 object Launcher {
 
   def main(args: Array[String]): Unit = {
-
     val filters: Filters = Filters(None ,Some("Apartment"),Some(2400000.0), None, None)
 
     val filters2: Filters = Filters(Some("Road") ,Some("House"),Some(2400000.0), None, None)
@@ -33,7 +32,7 @@ object Launcher {
     println("mainSort test")
     println("=============================================================================================")
 
-    println(Future(Operations.mainFilter(filters, propertyList).count(p => true), Operations.mainSort(sortList, Operations.mainFilter(filters, propertyList), true)))
+    println(Operations.mainFilter(filters, propertyList).count(p => true), Operations.mainSort(sortList, Operations.mainFilter(filters, propertyList), true))
 
     println("=============================================================================================")
     println("buyProperty test")
@@ -69,10 +68,13 @@ object Launcher {
     println("combineFilteredLists test")
     println("=============================================================================================")
 
+    // creates future for the function combineFilteredLists
     val future = Future(Operations.combineFilteredLists(List(Operations.mainFilter(filters, propertyList), Operations.mainFilter(filters2, propertyList), Operations.mainFilter(filters3, propertyList))))
 
+    // retreives the result of the future of the function combineFilteredLists
     val resultFuture = Await.result(future, 2.seconds)
 
+    // prints the result of the future of the function combineFilteredLists
     println(resultFuture)
   }
 
