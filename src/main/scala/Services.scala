@@ -1,4 +1,6 @@
 object Services {
+
+  //comparison: compares two properties and returns a summary of the compared attributes with sentences generated during the comparison
   def comparison(property1:Property,property2:Property): Unit = {
     val priceDifference = property1.price - property2.price;
     val sqFTDifference = property1.sqFt - property2.sqFt;
@@ -75,7 +77,7 @@ object Services {
     println(bathroomDiffString)
     println(receptionDiffString)
   }
-
+  //showCredit: calculates an interestrate and shows if the property can be bought with the given income
   def showCredit(propertyList:List[Property], income:Double):Unit = {
     try {
       propertyList.map(p => println(p+"Interest Rate: "+(p.price/(income*10))+"%"+"\n"+"Term: "+(p.price/(income/3)/12).ceil+" years"+"\n"+"Decision: "+(((p.price/(income/3)/12).ceil) < 10 ).toString))
@@ -83,19 +85,19 @@ object Services {
       case ex:Exception => println("Division by zero"+ ex.getMessage)
     }
   }
-
+  //buyProperty: Changes the owner of a property to the buyer given to the function
   def buyProperty(buyer:String, property:Property):Property = {
     Property(property.id,property.propertyName,property.price,property.propertyType, property.sqFt, property.bedrooms, property.bathrooms, property.receptions, property.location,property.city,property.postal,Some(buyer))
   }
-
+  //showRent: Shows the rent based on the calculation in the calculateRent function to every property in a list of properties
   def showRent(propertyList: List[Property]): Unit ={
     propertyList.map(p => println(p+"Calculated Rent: "+(calculateRent(p))+"£"))
   }
-
+  //calculateRent: Calculates the rent of a property
   def calculateRent(property: Property): Double ={
     property.price*.007
   }
-
+  //rentOrBuy: Compares the monthly cost for renting and for buying a property and gives a decision which would make more sense
   def rentOrBuy(property: Property, income: Double): Unit ={
     val rent: Double = calculateRent(property)
     val monthlyCost: Double = property.price*0.005+1000
@@ -120,7 +122,7 @@ object Services {
       }
     }
   }
-
+  //monthsUntilAmortized: Calculates until when you need to rent an object to someone for it to amortize itself
   def monthsUntilAmortized(property: Property): Unit ={
     try{
       println("It would take " + (property.price/calculateRent(property)).ceil.toInt + " months of renting out the property \"" + property.propertyName + "\" until it is amortized")
